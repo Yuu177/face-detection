@@ -1,12 +1,8 @@
-#include <opencv2/dnn.hpp>
-#include <opencv2/dnn/shape_utils.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/opencv.hpp>
 #include <string>
 
 #include "opencv2/core/mat.hpp"
 #include "opencv2/dnn/dnn.hpp"
+#include "opencv2/opencv.hpp"
 
 int main() {
   // TODO 配置文件路径要抽取出来
