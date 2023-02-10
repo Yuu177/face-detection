@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e
 set -x
 
@@ -16,6 +15,5 @@ make -j16
 export LD_LIBRARY_PATH=`pwd`/runtime:${LD_LIBRARY_PATH}
 
 # 在根目录下运行
-cp bin/CppDemo ../CppDemo
 cd ..
-./CppDemo
+./build/bin/CppDemo

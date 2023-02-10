@@ -15,12 +15,16 @@ int main() {
   // cv::dnn::Net caffe_net = cv::dnn::readNet(modelBinary, modelConfig);
   cv::dnn::Net caffe_net = cv::dnn::readNetFromCaffe(modelConfig, modelBinary);
   if (caffe_net.empty()) {
-    std::cerr << "load caffe model error" << std::endl;
+    std::cerr << "load caffe model failed" << std::endl;
     exit(-1);
   }
 
   // Read an image
-  cv::Mat frame = cv::imread("headPose.jpg");
+  cv::Mat frame = cv::imread("image/headPose.jpg");
+  if (frame.empty()) {
+    std::cerr << "load image failed" << std::endl;
+    exit(-1);
+  }
 
   // Pre-process the image
   // Scalar(104, 117, 123) 在这个代码片段中代表的是图像颜色的均值（mean
