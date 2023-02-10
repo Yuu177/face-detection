@@ -57,8 +57,8 @@ int main() {
   // 输出 blob(detection) 为 [1, 1, x, 7]，这是个多维数组
   // 其中 x 是最后保留的框的个数，最后一维存放的数据为
   // [image_id, label, confidence, xmin, ymin, xmax, ymax]
-  // 这个 [xmin, ymin] 就是检测到物体的左上角
-  // [xmax, ymax] 就是检测到物体的右下角
+  // 这个 [xmin, ymin] 就是检测到物体的左上角坐标在整张图片中的比例
+  // [xmax, ymax] 就是检测到物体的右下角坐标在整张图片中的比例
   // 也就是说 detection.size[2] 是检测到的对象的数量，对应 x
   // detection.size[3] 是每次检测的结果数量（边界框数据和置信度），对应 7
   // 列 0：物体存在的置信度（// TODO 不确定）
