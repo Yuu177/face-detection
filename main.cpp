@@ -2,6 +2,7 @@
 
 #include "opencv2/core/mat.hpp"
 #include "opencv2/dnn/dnn.hpp"
+#include "opencv2/imgcodecs.hpp"
 #include "opencv2/opencv.hpp"
 
 int main() {
@@ -20,7 +21,7 @@ int main() {
   }
 
   // Read an image
-  cv::Mat frame = cv::imread("image/headPose.jpg");
+  cv::Mat frame = cv::imread("image/input.jpg");
   if (frame.empty()) {
     std::cerr << "load image failed" << std::endl;
     exit(-1);
@@ -54,7 +55,7 @@ int main() {
   // std::cout << detection.size[0] << " " << detection.size[1] << " "
   //           << detection.size[2] << " " << detection.size[3] << std::endl;
 
-  // 输出 blob(detection) 为 [1, 1, x, 7]，这是个多维数组
+  // 输出 blob(detection) 为 [1, 1, x, 7]，这是个四维数组
   // 其中 x 是最后保留的框的个数，最后一维存放的数据为
   // [image_id, label, confidence, xmin, ymin, xmax, ymax]
   // 这个 [xmin, ymin] 就是检测到物体的左上角坐标在整张图片中的比例
@@ -79,12 +80,12 @@ int main() {
   // 所指内存，图像的行步长由 step 指定。
   // 这个转换有点抽象，就是把多维数组转换成了二维数组
   // TODO 该转换过程画图
-  cv::Mat detectionMat(detection.size[2], detection.size[3], CV_32F,
+  cv::Mat detection_mat(detection.size[2], detection.size[3], CV_32F,
                        detection.ptr<float>());
 
   // Draw the rectangles
-  for (int i = 0; i < detectionMat.rows; i++) {
-    float confidence = detectionMat.at<float>(i, 2);
+  for (int i = 0; i < detection_mat.rows; i++) {
+    float confidence = detection_mat.at<float>(i, 2);
     // 置信度（confidence score）是指模型对于特定的输入数据的预测结果的确信度，
     // 通常以0~1的值表示。
     // 一般来说，如果模型的置信度越高，它的预测结果就越可信。
@@ -93,11 +94,11 @@ int main() {
     if (confidence > 0.5) {
       // 由于最终的人脸检测结果需要在图片上绘制，因此需要将这个比例值转化为实际的像素坐标，这就是为什么要乘上图片宽度（即
       // frame.cols）的原因。
-      int x_left = static_cast<int>(detectionMat.at<float>(i, 3) * frame.cols);
-      int y_top = static_cast<int>(detectionMat.at<float>(i, 4) * frame.rows);
-      int x_right = static_cast<int>(detectionMat.at<float>(i, 5) * frame.cols);
+      int x_left = static_cast<int>(detection_mat.at<float>(i, 3) * frame.cols);
+      int y_top = static_cast<int>(detection_mat.at<float>(i, 4) * frame.rows);
+      int x_right = static_cast<int>(detection_mat.at<float>(i, 5) * frame.cols);
       int y_bottom =
-          static_cast<int>(detectionMat.at<float>(i, 6) * frame.rows);
+          static_cast<int>(detection_mat.at<float>(i, 6) * frame.rows);
 
       cv::Rect face_rec(x_left, y_top, x_right - x_left, y_bottom - y_top);
 
@@ -114,6 +115,7 @@ int main() {
     }
   }
   imshow("detections", frame);
+  // cv::imwrite("output.jpg", frame);
   cv::waitKey(0);
   return 0;
 }
